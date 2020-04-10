@@ -1,13 +1,13 @@
 .scroll-div {
     position: relative;
+    display: inline-block;
     user-select: none;
-    .scroll-div-view {
-        height: 100% !important; // 用来测试，之后去掉important
-        overflow: scroll;
+    &.is-native-div {
+        display: block;
     }
-    .scroll-div-wrap {
-        box-sizing: border-box;
+    .scroll-div-view {
         height: 100%;
+        overflow: scroll;
     }
     @mixin showBar {
         cursor: pointer;

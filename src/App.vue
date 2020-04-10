@@ -59,10 +59,4 @@ export default {
   .scroll-div {
     background-color: #fff;
   }
-  .scroll-div-view {
-    padding: 20px;
-  }
-  // .scroll-div-view > div {
-  //   width: 500px;
-  // }
 </style>

@@ -1,7 +1,7 @@
 <template>
-    <div class="scroll-div" :class="{'is-scroll-native': isSurportNative}" :style="{height: sectionHeight, width: sectionWidth, overflow: needCustom ? 'hidden' : 'auto'}">
-        <div v-if="needCustom" ref="scrollDivView" class="scroll-div-view">
-            <div class="scroll-div-wrap"><slot></slot></div>
+    <div class="scroll-div" :class="{'is-scroll-native': isSurportNative, 'is-native-div': !needCustom}" :style="{overflow: needCustom ? 'hidden' : 'auto'}">
+        <div v-if="needCustom" ref="scrollDivView" class="scroll-div-view" :style="{height: sectionHeight, width: sectionWidth}">
+            <slot></slot>
         </div>
         <div v-if="needCustom" ref="scrollY" class="scroll-div-y">
             <div ref="scrollYBar" class="scroll-div-y-bar" :class="{'is-show': showScrollY}"></div>
@@ -216,7 +216,7 @@ export default {
         this.scrollX = this.$refs.scrollX;
         this.scrollYBar = this.$refs.scrollYBar;
         this.scrollXBar = this.$refs.scrollXBar;
-        this.scrollContainer.style.cssText += `margin-right:-${this.gutterWidth}px;margin-bottom:-${this.gutterWidth}px;height: calc(100% + ${this.gutterWidth}px);`
+        this.scrollContainer.style.cssText += `margin-right:-${this.gutterWidth}px;margin-bottom:-${this.gutterWidth}px;`
         this.calcSize(true);
         this.calcSize();
         this.scrollContainer.addEventListener('scroll', this.handleScroll);
