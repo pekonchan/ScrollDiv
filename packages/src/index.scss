@@ -1,0 +1,63 @@
+.scroll-div {
+    position: relative;
+    user-select: none;
+    .scroll-div-view {
+        height: 100% !important; // 用来测试，之后去掉important
+        overflow: scroll;
+    }
+    .scroll-div-wrap {
+        box-sizing: border-box;
+        height: 100%;
+    }
+    @mixin showBar {
+        cursor: pointer;
+        opacity: 1;
+        transition: opacity 0s ease 0s;
+    }
+    .scroll-div-y {
+        position: absolute;
+        right: 1px;
+        top: 0;
+        height: 100%;
+        width: 7px;
+        .scroll-div-y-bar {
+            width: 7px;
+            border-radius: 7px;
+            background-color:rgba(0, 0, 0, .5);
+            opacity: 0;
+            transition: opacity .5s ease 0s;
+            &.is-show {
+                @include showBar();
+            }
+        }
+    }
+    .scroll-div-x {
+        position: absolute;
+        bottom: 1px;
+        left: 0;
+        width: 100%;
+        height: 7px;
+        .scroll-div-x-bar {
+            height: 7px;
+            border-radius: 7px;
+            background-color:rgba(0, 0, 0, .5);
+            opacity: 0;
+            transition: opacity .5s ease 0s;
+            &.is-show {
+                @include showBar();
+            }
+        }
+    }
+
+    &.is-scroll-native::-webkit-scrollbar {
+        width: 7px;
+        height: 7px;
+    }
+    &.is-scroll-native::-webkit-scrollbar-thumb {
+        border-radius: 7px;
+        background: rgba(0, 0, 0, .5);
+    }
+    // &.is-scroll-native::-webkit-scrollbar-thumb:hover {
+    //     background: #b5b5b5;
+    // }
+}
