@@ -1,6 +1,14 @@
 <template>
-    <div class="scroll-div" :class="{'is-scroll-native': isSurportNative, 'is-native-div': !needCustom}" :style="{overflow: needCustom ? 'hidden' : 'auto'}">
-        <div v-if="needCustom" ref="scrollDivView" class="scroll-div-view" :style="{height: sectionHeight, width: sectionWidth}">
+    <div
+        class="scroll-div"
+        :class="{'is-scroll-native': isSurportNative, 'is-native-div': !needCustom, [viewClass]: !needCustom}"
+        :style="divStyle">
+        <div
+            v-if="needCustom"
+            ref="scrollDivView"
+            class="scroll-div-view"
+            :class="{[viewClass]: needCustom}"
+            :style="viewStyle">
             <slot></slot>
         </div>
         <div v-if="needCustom" ref="scrollY" class="scroll-div-y">
@@ -18,15 +26,23 @@ export default {
     props: {
         height: {
             type: [Number, String],
-            default: 'auto'
+            default: ''
         },
         width: {
             type: [Number, String],
-            default: 'auto'
+            default: ''
+        },
+        padding: {
+            type: String,
+            default: ''
         },
         useNative: {
             type: Boolean,
             default: true
+        },
+        viewClass: {
+            type: String,
+            default: ''
         }
     },
     data () {
@@ -52,11 +68,29 @@ export default {
         }
     },
     computed: {
-        sectionHeight () {
+        viewHeight () {
             return this.formatValue(this.height);
         },
-        sectionWidth () {
+        viewWidth () {
             return this.formatValue(this.width);
+        },
+        divStyle () {
+            if (this.needCustom) {
+                return {};
+            } else {
+                const style = {};
+                this.width && (style.width = this.viewWidth);
+                this.height && (style.height = this.viewHeight);
+                this.padding && (style.padding = this.padding);
+                return style;
+            }
+        },
+        viewStyle () {
+            const style = {};
+            this.width && (style.width = this.viewWidth);
+            this.height && (style.height = this.viewHeight);
+            this.padding && (style.padding = this.padding);
+            return style;
         }
     },
     methods: {

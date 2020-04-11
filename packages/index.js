@@ -1,11 +1,11 @@
-import ScrollNav from './src';
+import ScrollDiv from './src';
 
-ScrollNav.install = (Vue) => {
-    Vue.component(ScrollNav.name, ScrollNav);
+ScrollDiv.install = (Vue) => {
+    Vue.component(ScrollDiv.name, ScrollDiv);
 };
 
 if (window && window.Vue) {
-    ScrollNav.install(window.Vue);
+    ScrollDiv.install(window.Vue);
 }
 
-export default ScrollNav
+export default ScrollDiv

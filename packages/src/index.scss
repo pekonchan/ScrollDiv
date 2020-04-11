@@ -4,6 +4,7 @@
     user-select: none;
     &.is-native-div {
         display: block;
+        overflow: auto;
     }
     .scroll-div-view {
         height: 100%;
@@ -57,7 +58,4 @@
         border-radius: 7px;
         background: rgba(0, 0, 0, .5);
     }
-    // &.is-scroll-native::-webkit-scrollbar-thumb:hover {
-    //     background: #b5b5b5;
-    // }
 }

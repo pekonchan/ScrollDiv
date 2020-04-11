@@ -1,15 +1,15 @@
 {
-  "name": "vue-scroll-nav",
-  "version": "0.2.3",
-  "keyword": "vue-scroll-nav scrollnav scrollNav ScrollNav VueScrollNav scroll nav fixed sticky menu",
+  "name": "vue-scroll-div",
+  "version": "1.0.0",
+  "keyword": "vue-scroll-div scrolldiv VueScrollDiv vuescroll",
   "author": "pekonchan",
-  "main": "lib/vue-scroll-nav.umd.min.js",
+  "main": "lib/vue-scroll-div.umd.min.js",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "lib": "vue-cli-service build --target lib --name vue-scroll-nav --dest lib packages/index.js"
+    "lib": "vue-cli-service build --target lib --name vue-scroll-div --dest lib packages/index.js"
   },
   "dependencies": {
     "core-js": "^3.6.4",
@@ -28,7 +28,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:pekonchan/scrollNav.git"
+    "url": "git@github.com:pekonchan/ScrollDiv.git"
   },
   "eslintConfig": {
     "root": true,
