@@ -1,13 +1,11 @@
 # vue-scroll-div
 
 ## 描述
-This is the scroll container component based on `vue.js`. This component is designed for, when the container need to show the scrollbar, it will show the scrollbar like that in mac os. Because of the scrollbar in Windows broswers is ugly.
 此为`vue.js`版滚动容器组件，当需要展示滚动条是，实现与`mac os`浏览器上相类似的滚动条样式和效果，主要原因是`windows`系统上的浏览器原生滚动条样式比较丑陋
 
 可用该组件替代类似`div`等容器使用，该组件的滚动条样式是类`mac os`风格。
-You can use this component instead of the html like `div`.
 
-### 特点
+## 特点
 - 针对如`mac`系统上绝大多数浏览器，会采用原生的滚动条，组件最终也只会渲染成一个`div`标签。理由：
     - mac的原生滚动条本身交互效果还是挺好且好看的，不需要自定义滚动条
     - 自定义滚动条会渲染成几个嵌套结构，增加DOM，所以能不用就不用了
@@ -22,7 +20,7 @@ You can use this component instead of the html like `div`.
 ** 该插件不包含`vue.js`的引入，请你自行引入`vue.js` **
 
 `<script>`方式直接引入`lib/vue-scroll-nav.umd.min.js`，如：
-```
+```js
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 <script src="node_modules/vue-scroll-nav/lib/vue-scroll-nav.umd.min.js"></script>
 ```
@@ -42,7 +40,7 @@ Vue.use(ScrollDiv);
 
 ## 使用介绍
 这是一个简单的使用情况
-```
+```html
 <Scroll-Div width="400px" height="100px" view-class="yourclassname">
     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis quas nobis praesentium nisi deserunt, fuga libero, error quia vero nulla corporis odio fugit atque et accusamus numquam. Tempora, qui numquam!
 </Scroll-Div>

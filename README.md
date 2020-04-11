@@ -1,11 +1,13 @@
 # vue-scroll-div
 
+[中文版说明](https://github.com/pekonchan/ScrollDiv/blob/master/lang/readme_cn.md)
+
 ## Description
 This is the scroll container component based on `vue.js`. This component is designed for, when the container need to show the scrollbar, it will show the scrollbar like that in mac os. Because of the scrollbar in Windows broswers is ugly.
 
 You can use this component instead of the html like `div`.
 
-### Feature
+## Feature
 - For most browsers on `MAC` systems, native scrollbars are used, and components end up being rendered as a 'div' tag. Reason:
     - The MAC's native scrollbar itself is nice and interactive, and doesn't require a custom scrollbar
     - Custom scrollbars render several nested structures, it will adding DOM, so it's no neccessary to use them.
@@ -21,7 +23,7 @@ In short, the component takes the "best" approach, with the simplest rendering s
 
 ### script tag
 Use the `<script>` to import `lib/vue-scroll-nav.umd.min.js`
-```
+```js
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 <script src="node_modules/vue-scroll-nav/lib/vue-scroll-nav.umd.min.js"></script>
 ```
@@ -41,7 +43,7 @@ Vue.use(ScrollDiv);
 
 ## Usage
 This is a simple usage
-```
+```html
 <Scroll-Div width="400px" height="100px" view-class="yourclassname">
     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis quas nobis praesentium nisi deserunt, fuga libero, error quia vero nulla corporis odio fugit atque et accusamus numquam. Tempora, qui numquam!
 </Scroll-Div>
