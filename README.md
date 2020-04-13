@@ -65,6 +65,6 @@ The plug-in provides several props
 ## Support us
 The component may still be lacking, or you may be using it in a broader context, and if you are interested, you can work together to improve the component. Looking forward to your joining us
 
-[github](https://github.com/pekonchan/scrollNav)
+[github](https://github.com/pekonchan/ScrollDiv)
 
 Any questions are welcome.
