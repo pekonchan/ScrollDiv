@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Scroll-Div view-class="myview">
+    <Scroll-Div view-class="myview" :useNative="true">
       <div v-for="(item, index) in contents" :key="index">{{item.label}}</div>
     </Scroll-Div>
   </div>

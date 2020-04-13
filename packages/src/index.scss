@@ -1,13 +1,13 @@
 .scroll-div {
     position: relative;
     display: inline-block;
+    overflow: hidden;
     user-select: none;
     &.is-native-div {
         display: block;
         overflow: auto;
     }
     .scroll-div-view {
-        height: 100%;
         overflow: scroll;
     }
     @mixin showBar {

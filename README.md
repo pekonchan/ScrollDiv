@@ -8,10 +8,10 @@ This is the scroll container component based on `vue.js`. This component is desi
 You can use this component instead of the html like `div`.
 
 ## Feature
-- For most browsers on `MAC` systems, native scrollbars are used, and components end up being rendered as a 'div' tag. Reason:
+- The scrollbar area does not occupy the content itself space, which affects the size of the browser scrollbar. We will use the native scrollbar, and components end up being rendered as a `div` tag.
     - The MAC's native scrollbar itself is nice and interactive, and doesn't require a custom scrollbar
+    - In addition to the case of 'MAC' mentioned above, due to the implementation problems of the scheme, the scrollbar of this type of browser is not customized, and this type of browser is relatively rare in the window system (not encountered yet). So don't add to the complexity of the solution by dealing with these few cases.
     - Custom scrollbars render several nested structures, it will adding DOM, so it's no neccessary to use them.
-- The scrollbar area does not occupy the space of the content itself (such as the browser of the MAC system, which is a special case), so the scheme is not simply to determine whether the system is' MAC '. Due to the implementation problems of the scheme, the scrollbar of this type of browser is not customized, and this type of browser is relatively rare in the window system (not encountered yet). So don't add to the complexity of the solution by dealing with these few cases. Also rendered as a 'div' tag.
 - For browsers other than the above two cases, the browser is generally the 'window' system browser, if it is the 'webkit' kernel browser, the component will use the '-webkit-scrollbar' and other CSS methods to customize the native scrollbar style, the final rendering as a 'div' tag. This option is optional for the user.
 - In addition to the above, custom scrollbar methods are used to render different results in different cases, which can be the most simple way to satisfy the beautiful scrollbar style.
 - The component contains horizontal and vertical scroll bars
