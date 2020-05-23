@@ -23,6 +23,7 @@
 
 <script>
 export default {
+    name: 'ScrollDiv',
     props: {
         height: {
             type: [Number, String],
