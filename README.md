@@ -19,7 +19,7 @@ You can use this component instead of the html like `div`.
 In short, the component takes the "best" approach, with the simplest rendering structure and the best component performance, provided the scrollbar style is significant.
 
 ## Install
-** This plug-in does not include the introduction of `vue.js`, please import `vue.js` yourself **
+**This plug-in does not include the introduction of `vue.js`, please import `vue.js` yourself**
 
 ### script tag
 Use the `<script>` to import `lib/vue-scroll-nav.umd.min.js`
@@ -27,7 +27,7 @@ Use the `<script>` to import `lib/vue-scroll-nav.umd.min.js`
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 <script src="node_modules/vue-scroll-nav/lib/vue-scroll-nav.umd.min.js"></script>
 ```
-so you can use the '<Scroll-Div>' tag directly in the 'Vue' application.
+so you can use the `<Scroll-Div>` tag directly in the 'Vue' application.
 
 ### npm：
 ```

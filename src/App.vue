@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Scroll-Div view-class="myview" :useNative="true">
+    <Scroll-Div width="400px" height="100px" padding="20px" view-class="myview">
       <div v-for="(item, index) in contents" :key="index">{{item.label}}</div>
     </Scroll-Div>
   </div>
@@ -58,8 +58,5 @@ export default {
   }
   .myview {
     background-color: #fff;
-    width: 400px;
-    height: 100px;
-    padding: 20px;
   }
 </style>
