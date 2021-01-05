@@ -14,6 +14,8 @@ You can use this component instead of the html like `div`.
     - Custom scrollbars render several nested structures, it will adding DOM, so it's no neccessary to use them.
 - For browsers other than the above two cases, the browser is generally the 'window' system browser, if it is the 'webkit' kernel browser, the component will use the '-webkit-scrollbar' and other CSS methods to customize the native scrollbar style, the final rendering as a 'div' tag. This option is optional for the user.
 - In addition to the above, custom scrollbar methods are used to render different results in different cases, which can be the most simple way to satisfy the beautiful scrollbar style.
+- Fix firefox and Internet Explorer, the 'padding-bottom' setting doesn't work, act the same as chrome and other browsers
+- Can automatically adapt to different browser scroll bar width, rather than write the usual '17px'
 - The component contains horizontal and vertical scroll bars
 
 In short, the component takes the "best" approach, with the simplest rendering structure and the best component performance, provided the scrollbar style is significant.
@@ -48,11 +50,13 @@ This is a simple usage
     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis quas nobis praesentium nisi deserunt, fuga libero, error quia vero nulla corporis odio fugit atque et accusamus numquam. Tempora, qui numquam!
 </Scroll-Div>
 ```
-It is best to use the props of `width`, `height`, `padding` provided by the component to set the width, height and padding, rather than restyle the CSS yourself；
+Considering that this component renders two different 'HTML' structures based on the browser's environment, follow these guidelines for styling:
 
-If you really want to override styles or add other styles in `CSS`, add the class name using the `view-class` prop provided by the component, and then add styles by class name.
+1. Use the `width`, `height`, `padding` properties provided by the component instead of changing the style in CSS.
 
-If you really don't want to go either way, keep an eye on the structure of the component rendering as you add styles, depending on the situation. Because this component renders two different 'HTML' structures depending on the browser's environment.
+2. If you want to add additional styles, add the class name using the `view-class` property provided by the component, and then add the style through the class name.
+
+If you really don't want to go either way, keep an eye on the structure rendered by the component when you add styles, as the case may be.
 
 ## Props
 The plug-in provides several props
@@ -61,6 +65,7 @@ The plug-in provides several props
 - `padding`：Optional. Set the padding of the container to 'String' type, just like the 'padding' property of 'CSS'. This value is not set by default.
 - `useNative`：Optional. For browsers whose scrollbar area occupies the space of the content itself (such as most browsers on the window system), if the browser is' webkit 'kernel, you can use the' CSS 'style to change the native scrollbar style. If this value is set to 'true', then 'CSS' is enabled to change the scrollbar style; otherwise, a custom scrollbar is used. It is recommended that this item be enabled to improve performance and reduce dom structure.
 - `viewClass`：Optional. Set the content container class name. In addition to 'width', 'height', 'padding' properties, it is recommended to use this value to specify the class name for style modification.
+- `optimize`: Optional. The problem that padding-bottom doesn't work in a custom scrollbar container in Firefox or Internet Explorer renders an extra element, so the default is' true ', which only works for Firefox or Internet Explorer.However, there is a case that if there is a container inside the 'scroll-div' container with the height set, the content overflows but 'overflow' is not set. In this case, the repair effect of 'padding-bottom' may not be good enough.
 
 ## Support us
 The component may still be lacking, or you may be using it in a broader context, and if you are interested, you can work together to improve the component. Looking forward to your joining us
