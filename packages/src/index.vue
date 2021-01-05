@@ -2,14 +2,15 @@
     <div
         class="scroll-div"
         :class="{'is-scroll-native': isSurportNative, 'is-native-div': !needCustom, [viewClass]: !needCustom}"
-        :style="divStyle">
+        :style="viewStyle">
         <div
             v-if="needCustom"
             ref="scrollDivView"
             class="scroll-div-view"
             :class="{[viewClass]: needCustom}"
-            :style="viewStyle">
+            :style="divStyle">
             <slot></slot>
+            <div v-if="!needOptimize" class="scroll-view__padding" :style="{height: paddingBottom}"></div>
         </div>
         <div v-if="needCustom" ref="scrollY" class="scroll-div-y">
             <div ref="scrollYBar" class="scroll-div-y-bar" :class="{'is-show': showScrollY}"></div>
@@ -44,9 +45,14 @@ export default {
         viewClass: {
             type: String,
             default: ''
+        },
+        optimize: {
+            type: Boolean,
+            default: true
         }
     },
     data () {
+        const disabledOptimize = navigator.userAgent.indexOf('Firefox') > -1 || "ActiveXObject" in window || window.navigator.userAgent.indexOf("MSIE") > -1
         return {
             needCustom: false,
             isSurportNative: false,
@@ -65,38 +71,54 @@ export default {
             timerX: null,
             scrollTop: 0,
             scrollLeft: 0,
-            gutterWidth: 0
+            gutterWidth: 0,
+            paddingBottom: 0,
+            disabledOptimize
         }
     },
     computed: {
+        needOptimize () {
+            return this.optimize && !this.disabledOptimize
+        },
         viewHeight () {
             return this.formatValue(this.height);
         },
         viewWidth () {
             return this.formatValue(this.width);
         },
-        divStyle () {
-            if (this.needCustom) {
-                return {};
-            } else {
-                const style = {};
-                this.width && (style.width = this.viewWidth);
-                this.height && (style.height = this.viewHeight);
-                this.padding && (style.padding = this.padding);
-                return style;
-            }
-        },
         viewStyle () {
             const style = {};
             this.width && (style.width = this.viewWidth);
             this.height && (style.height = this.viewHeight);
-            this.padding && (style.padding = this.padding);
+            if (!this.needCustom && this.padding) {
+                style.padding = this.padding;
+            }
+            return style;
+        },
+        divStyle () {
+            const style = {};
+            this.height ? (style.height = `calc(${this.viewHeight} + ${this.gutterWidth}px)`) : style['overflow-x'] = 'hidden';
+            style.width = `calc(${this.width ? this.viewWidth : '100%'} + ${this.gutterWidth}px)`
+            if (this.padding) {
+                style.padding = this.padding;
+                if (!this.needOptimize) {
+                    style['padding-bottom'] = 0;
+                    this.calcPaddingBottom();
+                }
+            }
             return style;
         }
     },
     methods: {
         formatValue (value) {
             return typeof value === 'number' ? `${value}px` : value;
+        },
+        calcPaddingBottom () {
+            const ele = document.createElement('div')
+            ele.style.padding = this.padding
+            document.body.appendChild(ele)
+            this.paddingBottom = ele.style.paddingBottom
+            document.body.removeChild(ele)
         },
         handleScroll (el) {
             const e = el || event;
@@ -251,7 +273,6 @@ export default {
         this.scrollX = this.$refs.scrollX;
         this.scrollYBar = this.$refs.scrollYBar;
         this.scrollXBar = this.$refs.scrollXBar;
-        this.scrollContainer.style.cssText += `margin-right:-${this.gutterWidth}px;margin-bottom:-${this.gutterWidth}px;`
         this.calcSize(true);
         this.calcSize();
         this.scrollContainer.addEventListener('scroll', this.handleScroll);
