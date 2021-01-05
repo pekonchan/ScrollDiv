@@ -1,5 +1,6 @@
 <template>
     <div
+        ref="scrollDiv"
         class="scroll-div"
         :class="{'is-scroll-native': isSurportNative, 'is-native-div': !needCustom, [viewClass]: !needCustom}"
         :style="viewStyle">
@@ -49,6 +50,10 @@ export default {
         optimize: {
             type: Boolean,
             default: true
+        },
+        scroll: {
+            type: Function,
+            default: () => {}
         }
     },
     data () {
@@ -267,6 +272,10 @@ export default {
         this.needCustom && this.useNative && this.checkWebkit();
     },
     mounted () {
+        if (this.scroll) {
+            const container = this.needCustom ? this.$refs.scrollDivView : this.$refs.scrollDiv
+            container.addEventListener('scroll', this.scroll)
+        }
         if (!this.needCustom) { return; }
         this.scrollContainer = this.$refs.scrollDivView;
         this.scrollY = this.$refs.scrollY;
