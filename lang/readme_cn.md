@@ -1,5 +1,7 @@
 # vue-scroll-div
 
+[Change Log](https://github.com/pekonchan/ScrollDiv/wiki/Change-Log)
+
 ## 描述
 此为`vue.js`版滚动容器组件，当需要展示滚动条是，实现与`mac os`浏览器上相类似的滚动条样式和效果，主要原因是`windows`系统上的浏览器原生滚动条样式比较丑陋
 
