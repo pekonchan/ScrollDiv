@@ -64,7 +64,14 @@ Vue.use(ScrollDiv);
 - `padding`：选填。设置容器的内边距，值为`String`类型，跟设置`css`的`padding`属性一样。该值默认不设置。
 - `useNative`：选填。针对滚动条区域占用内容本身空间的浏览器（如window系统上绝大多数浏览器），如果浏览器是`webkit`内核，则可以用`css`样式改变原生滚动条样式。如果该值设置为`true`，则启用`css`改变滚动条样式，否则，用自定义滚动条。建议开启该项，能改善性能和减少dom结构。
 - `viewClass`：选填。设置内容容器设置类名。除`width`,`height`,`padding`属性外，使用该值指定类名进行样式修改。
-- `optimize`: 选填. 优化在Firefox或IE浏览器下，自定义滚动条容器里，padding-bottom不起效的问题,会多渲染了一个无用的元素，故新增了该属性，默认值是`true`，即仅针对Firefox或IE浏览器才这么处理. 但是有一种情况,如果`Scroll-Div`容器内有一个容器设定了高度,内容过多溢出,但是未设置`overflow`,这种情况,`padding-bottom`的修复效果可能会欠佳存在不足.
+- `optimize`: 选填。优化在Firefox或IE浏览器下，自定义滚动条容器里，padding-bottom不起效的问题,会多渲染了一个无用的元素，故新增了该属性，默认值是`true`，即仅针对Firefox或IE浏览器才这么处理. 但是有一种情况,如果`Scroll-Div`容器内有一个容器设定了高度,内容过多溢出,但是未设置`overflow`,这种情况,`padding-bottom`的修复效果可能会欠佳存在不足.
+- `scroll`: 选填。`Function`类型,传递一个函数,用作为滚动容器绑定滚动事件监听,函数的第一个形参是表示触发事件的`event`对象
+
+## Methods
+### scrollTo
+可以指定滚动容器滚动到什么位置,接受两个入参
+- `yPosition`: Number / String.  指定垂直滚动的位置,相当于设置`scrollTop`,当为String类型时,只有等于`top`,才起效,会滚动到顶部
+- `xPosition`: Number / String.  指定横向滚动的位置,相当于设置`scrollLeft`,当为String类型时,只有等于`left`,才起效,会滚动到最左边
 
 ## Support us
 该组件或许还存在不足之处，或者你的使用场景更广阔，如果你有兴趣的话，可以一起努力完善这个组件。期待你的加入
