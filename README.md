@@ -1,5 +1,7 @@
 # vue-scroll-div
 
+[Change Log](https://github.com/pekonchan/ScrollDiv/wiki/Change-Log)
+
 [中文版说明](https://github.com/pekonchan/ScrollDiv/blob/master/lang/readme_cn.md)
 
 ## Description
