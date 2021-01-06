@@ -66,6 +66,13 @@ The plug-in provides several props
 - `useNative`：Optional. For browsers whose scrollbar area occupies the space of the content itself (such as most browsers on the window system), if the browser is' webkit 'kernel, you can use the' CSS 'style to change the native scrollbar style. If this value is set to 'true', then 'CSS' is enabled to change the scrollbar style; otherwise, a custom scrollbar is used. It is recommended that this item be enabled to improve performance and reduce dom structure.
 - `viewClass`：Optional. Set the content container class name. In addition to 'width', 'height', 'padding' properties, it is recommended to use this value to specify the class name for style modification.
 - `optimize`: Optional. The problem that padding-bottom doesn't work in a custom scrollbar container in Firefox or Internet Explorer renders an extra element, so the default is' true ', which only works for Firefox or Internet Explorer.However, there is a case that if there is a container inside the 'scroll-div' container with the height set, the content overflows but 'overflow' is not set. In this case, the repair effect of 'padding-bottom' may not be good enough.
+- `scroll`: Optional. `Function` type. Pass a function that binds the scroll event listener as a scroll container, the first parameter of which is the 'event' object that represents the triggering event
+
+## Methods
+### scrollTo
+You can specify where the scroll container should scroll to, and accept two params:
+- `yPosition`: Number / String. Specifying the vertical scrolling position is equivalent to setting 'scrollTop', which only works if it is equal to 'top' when it is of String type and will scroll to the top
+- `xPosition`: Number / String. Specifying the position of horizontal scrolling is equivalent to setting 'scrollLeft', which only works if it is equal to 'left' when it is of String type, and will scroll to the far left
 
 ## Support us
 The component may still be lacking, or you may be using it in a broader context, and if you are interested, you can work together to improve the component. Looking forward to your joining us

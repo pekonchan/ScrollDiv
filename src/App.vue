@@ -10,10 +10,11 @@
       <div v-for="(item, index) in contents" :key="index">{{item.label}}</div>
     </Scroll-Div>
 
-    <Scroll-Div height="200px" class="my-scroll-div" view-class="myview" :useNative="false" :scroll="handleScroll">
+    <Scroll-Div ref="scrollTopExam" height="200px" class="my-scroll-div" view-class="myview" :useNative="false" :scroll="handleScroll">
       <div style="width: 1000px;height: 30px;background: pink"></div>
       <div v-for="(item, index) in contents" :key="index">{{item.label}}</div>
     </Scroll-Div>
+    <button @click="scrollToTop">scroll to top</button>
 
     <Scroll-Div width="500px" height="200px" class="my-scroll-div" view-class="myview">
       <div style="width: 1000px;height: 30px;background: pink"></div>
@@ -91,8 +92,12 @@ export default {
     };
   },
   methods: {
-    handleScroll () {
+    handleScroll (el) {
+      console.log('handleScroll -> target', el.target);
       console.log('scrolling')
+    },
+    scrollToTop () {
+      this.$refs.scrollTopExam.scrollTo('top')
     }
   }
 }

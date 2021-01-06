@@ -61,6 +61,7 @@ export default {
         return {
             needCustom: false,
             isSurportNative: false,
+            customScrollContainer: null,
             scrollContainer: null,
             scrollYBar: null,
             scrollXBar: null,
@@ -103,7 +104,7 @@ export default {
         divStyle () {
             const style = {};
             this.height ? (style.height = `calc(${this.viewHeight} + ${this.gutterWidth}px)`) : style['overflow-x'] = 'hidden';
-            style.width = `calc(${this.width ? this.viewWidth : '100%'} + ${this.gutterWidth}px)`
+            style.width = `calc(${this.width ? this.viewWidth : '100%'} + ${this.gutterWidth}px)`;
             if (this.padding) {
                 style.padding = this.padding;
                 if (!this.needOptimize) {
@@ -149,9 +150,9 @@ export default {
                 isVertical = false;
                 transform = 'translateX';
             }
-            const scrollAreaValue = this.scrollContainer[scrollArea];
-            const clientAreaValue = this.scrollContainer[clientArea];
-            const scrollValue = this.scrollContainer[scroll];
+            const scrollAreaValue = this.customScrollContainer[scrollArea];
+            const clientAreaValue = this.customScrollContainer[clientArea];
+            const scrollValue = this.customScrollContainer[scroll];
             this[showScroll] = true;
             this[timer] && clearTimeout(this[timer]);
             this.calcSize(isVertical);
@@ -167,12 +168,12 @@ export default {
             const target = e.target || e.srcElement;
             if (/scroll-div-y-bar/.test(target.className)) {
                 this.startY = e.pageY;
-                this.distanceY = this.scrollContainer.scrollTop;
+                this.distanceY = this.customScrollContainer.scrollTop;
                 this.scrollY.removeEventListener('mouseout', this.hoverOutSroll);
                 document.addEventListener('mousemove', this.moveScrollYBar);
             } else {
                 this.startX = e.pageX;
-                this.distanceX = this.scrollContainer.scrollLeft;
+                this.distanceX = this.customScrollContainer.scrollLeft;
                 this.scrollX.removeEventListener('mouseout', this.hoverOutSroll);
                 document.addEventListener('mousemove', this.moveScrollXBar);
             }
@@ -194,19 +195,19 @@ export default {
         moveScrollBar (el, pageOffset, start, scrollArea, clientArea, distance, scroll) {
             const e = el || event;
             const delta = e[pageOffset] - this[start];
-            const scrollAreaValue = this.scrollContainer[scrollArea];
-            const clientAreaValue = this.scrollContainer[clientArea];
+            const scrollAreaValue = this.customScrollContainer[scrollArea];
+            const clientAreaValue = this.customScrollContainer[clientArea];
             let change = scrollAreaValue * delta / clientAreaValue;
             change += this[distance];
             if (change < 0) {
-                this.scrollContainer[scroll] = 0;
+                this.customScrollContainer[scroll] = 0;
                 return;
             }
             if (change + clientAreaValue >= scrollAreaValue) {
-                this.scrollContainer[scroll] = scrollAreaValue - clientAreaValue;
+                this.customScrollContainer[scroll] = scrollAreaValue - clientAreaValue;
                 return;
             }
-            this.scrollContainer[scroll] = change;
+            this.customScrollContainer[scroll] = change;
         },
         hoverSrollYBar () {
             this.hoverScrollBar('scrollHeight', 'clientHeight', 'showScrollY', 'scrollYBar', 'scrollY', 'height');
@@ -215,8 +216,8 @@ export default {
             this.hoverScrollBar('scrollWidth', 'clientWidth', 'showScrollX', 'scrollXBar', 'scrollX', 'width');
         },
         hoverScrollBar (scrollArea, clientArea, showScroll, scrollBar, scrollBarArea, style) {
-            const sA = this.scrollContainer[scrollArea];
-            const cA = this.scrollContainer[clientArea];
+            const sA = this.customScrollContainer[scrollArea];
+            const cA = this.customScrollContainer[clientArea];
             if (sA > cA) {
                 this[scrollBar].style[style] = cA * cA / sA + 'px';
                 this[showScroll] = true;
@@ -263,8 +264,21 @@ export default {
                 clientArea = 'clientWidth';
                 scrollArea = 'scrollWidth';
             }
-            const clientAreaValue = this.scrollContainer[clientArea];
-            this[scrollBar].style[sizeKey] = clientAreaValue * clientAreaValue / this.scrollContainer[scrollArea] + 'px';
+            const clientAreaValue = this.customScrollContainer[clientArea];
+            this[scrollBar].style[sizeKey] = clientAreaValue * clientAreaValue / this.customScrollContainer[scrollArea] + 'px';
+        },
+        scrollTo (yPosition, xPosition) {
+            const { scrollContainer } = this;
+            if (yPosition === 'top') {
+                scrollContainer.scrollTop = 0;
+            } else if (!isNaN(+yPosition)) {
+                scrollContainer.scrollTop = +yPosition;
+            }
+            if (xPosition === 'left') {
+                scrollContainer.scrollLeft = 0;
+            } else if (!isNaN(+xPosition)) {
+                scrollContainer.scrollLeft = +xPosition;
+            }
         }
     },
     created () {
@@ -273,25 +287,25 @@ export default {
     },
     mounted () {
         if (this.scroll) {
-            const container = this.needCustom ? this.$refs.scrollDivView : this.$refs.scrollDiv
-            container.addEventListener('scroll', this.scroll)
+            this.scrollContainer = this.needCustom ? this.$refs.scrollDivView : this.$refs.scrollDiv;
+            this.scrollContainer.addEventListener('scroll', this.scroll);
         }
         if (!this.needCustom) { return; }
-        this.scrollContainer = this.$refs.scrollDivView;
+        this.customScrollContainer = this.$refs.scrollDivView;
         this.scrollY = this.$refs.scrollY;
         this.scrollX = this.$refs.scrollX;
         this.scrollYBar = this.$refs.scrollYBar;
         this.scrollXBar = this.$refs.scrollXBar;
         this.calcSize(true);
         this.calcSize();
-        this.scrollContainer.addEventListener('scroll', this.handleScroll);
+        this.customScrollContainer.addEventListener('scroll', this.handleScroll);
         this.scrollY.addEventListener('mouseover', this.hoverSrollYBar);
         this.scrollX.addEventListener('mouseover', this.hoverSrollXBar);
         
     },
     destroyed () {
         if (!this.needCustom) { return; }
-        this.scrollContainer.removeEventListener('scroll', this.handleScroll);
+        this.customScrollContainer.removeEventListener('scroll', this.handleScroll);
         this.scrollY.removeEventListener('mouseover', this.hoverSrollYBar);
         this.scrollX.removeEventListener('mouseover', this.hoverSrollXBar);
     }
