@@ -54,6 +54,10 @@ export default {
         scroll: {
             type: Function,
             default: () => {}
+        },
+        awaysShowScroll: {
+            type: Boolean,
+            default: false
         }
     },
     data () {
@@ -113,6 +117,11 @@ export default {
                 }
             }
             return style;
+        },
+        barStyle () {
+            return this.awaysShowScroll ? {
+                opacity: 1
+            } : {}
         }
     },
     methods: {
@@ -158,9 +167,11 @@ export default {
             this.calcSize(isVertical);
             const distance = scrollValue * clientAreaValue / scrollAreaValue;
             this[scrollBar].style.transform = `${transform}(${distance}px)`;
-            this[timer] = setTimeout(() => {
-                this[showScroll] = false;
-            }, 800);
+            if (!this.awaysShowScroll) {
+                this[timer] = setTimeout(() => {
+                    this[showScroll] = false;
+                }, 800);
+            }
             this[scroll] = target[scroll];
         },
         clickStart (el) {
@@ -183,8 +194,10 @@ export default {
             document.removeEventListener('mousemove', this.moveScrollYBar);
             document.removeEventListener('mousemove', this.moveScrollXBar);
             document.removeEventListener('mouseup', this.clickEnd);
-            this.scrollY.addEventListener('mouseout', this.hoverOutSroll);
-            this.scrollX.addEventListener('mouseout', this.hoverOutSroll);
+            if (!this.awaysShowScroll) {
+                this.scrollY.addEventListener('mouseout', this.hoverOutSroll);
+                this.scrollX.addEventListener('mouseout', this.hoverOutSroll);
+            }
         },
         moveScrollYBar (el) {
             this.moveScrollBar(el, 'pageY', 'startY', 'scrollHeight', 'clientHeight', 'distanceY', 'scrollTop');
@@ -279,6 +292,15 @@ export default {
             } else if (!isNaN(+xPosition)) {
                 scrollContainer.scrollLeft = +xPosition;
             }
+        },
+        updateScrollBar () {
+            const {clientHeight, clientWidth, scrollHeight, scrollWidth} = this.customScrollContainer
+            const showScrollY = scrollHeight > clientHeight
+            const showScrollX = scrollWidth > clientWidth
+            this.scrollYBar.style.opacity = showScrollY ? 1 : 0
+            this.scrollXBar.style.opacity = showScrollX ? 1 : 0
+            showScrollY && this.calcSize(true)
+            showScrollX && this.calcSize()
         }
     },
     created () {
@@ -296,18 +318,25 @@ export default {
         this.scrollX = this.$refs.scrollX;
         this.scrollYBar = this.$refs.scrollYBar;
         this.scrollXBar = this.$refs.scrollXBar;
-        this.calcSize(true);
-        this.calcSize();
         this.customScrollContainer.addEventListener('scroll', this.handleScroll);
-        this.scrollY.addEventListener('mouseover', this.hoverSrollYBar);
-        this.scrollX.addEventListener('mouseover', this.hoverSrollXBar);
-        
+        if (this.awaysShowScroll) {
+            this.updateScrollBar()
+            this.scrollYBar.addEventListener('mousedown', this.clickStart);
+            this.scrollXBar.addEventListener('mousedown', this.clickStart);
+        } else {
+            this.calcSize(true);
+            this.calcSize();
+            this.scrollY.addEventListener('mouseover', this.hoverSrollYBar);
+            this.scrollX.addEventListener('mouseover', this.hoverSrollXBar);
+        }
     },
     destroyed () {
         if (!this.needCustom) { return; }
         this.customScrollContainer.removeEventListener('scroll', this.handleScroll);
-        this.scrollY.removeEventListener('mouseover', this.hoverSrollYBar);
-        this.scrollX.removeEventListener('mouseover', this.hoverSrollXBar);
+        if (!this.awaysShowScroll) {
+            this.scrollY.removeEventListener('mouseover', this.hoverSrollYBar);
+            this.scrollX.removeEventListener('mouseover', this.hoverSrollXBar);
+        }
     }
 }
 </script>
