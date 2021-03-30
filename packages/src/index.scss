@@ -18,11 +18,13 @@
     }
     .scroll-div-y {
         position: absolute;
-        right: 1px;
+        right: 0;
         top: 0;
         height: 100%;
         width: 7px;
         .scroll-div-y-bar {
+            position: relative;
+            right: 1px;
             width: 7px;
             border-radius: 7px;
             background-color:rgba(0, 0, 0, .5);
@@ -35,11 +37,13 @@
     }
     .scroll-div-x {
         position: absolute;
-        bottom: 1px;
+        bottom: 0;
         left: 0;
         width: 100%;
         height: 7px;
         .scroll-div-x-bar {
+            position: relative;
+            bottom: 1px;
             height: 7px;
             border-radius: 7px;
             background-color:rgba(0, 0, 0, .5);
@@ -57,6 +61,6 @@
     }
     &.is-scroll-native::-webkit-scrollbar-thumb {
         border-radius: 7px;
-        background: rgba(0, 0, 0, .5);
+        background-color: rgba(0, 0, 0, .5);
     }
 }

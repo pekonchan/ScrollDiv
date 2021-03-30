@@ -13,11 +13,11 @@
             <slot></slot>
             <div v-if="!needOptimize" class="scroll-view__padding" :style="{height: paddingBottom}"></div>
         </div>
-        <div v-if="needCustom" ref="scrollY" class="scroll-div-y">
-            <div ref="scrollYBar" class="scroll-div-y-bar" :class="{'is-show': showScrollY}"></div>
+        <div v-if="needCustom" ref="scrollY" class="scroll-div-y" :style="yScrollWrapStyle">
+            <div ref="scrollYBar" class="scroll-div-y-bar" :class="{'is-show': showScrollY}" :style="yBarStyle"></div>
         </div>
-        <div v-if="needCustom" ref="scrollX" class="scroll-div-x">
-            <div ref="scrollXBar" class="scroll-div-x-bar" :class="{'is-show': showScrollX}"></div>
+        <div v-if="needCustom" ref="scrollX" class="scroll-div-x" :style="xScrollWrapStyle">
+            <div ref="scrollXBar" class="scroll-div-x-bar" :class="{'is-show': showScrollX}" :style="xBarStyle"></div>
         </div>
         <slot v-if="!needCustom"></slot>
     </div>
@@ -54,6 +54,22 @@ export default {
         scroll: {
             type: Function,
             default: () => {}
+        },
+        awaysShowScroll: {
+            type: Boolean,
+            default: false
+        },
+        barStyle: {
+            type: Object,
+            default: () => ({})
+        },
+        size: {
+            type: [Number, String],
+            default: ''
+        },
+        offset: {
+            type: [Number, String],
+            default: ''
         }
     },
     data () {
@@ -113,6 +129,32 @@ export default {
                 }
             }
             return style;
+        },
+        yBarStyle () {
+            return this.createBarStyle(true)
+        },
+        xBarStyle () {
+            return this.createBarStyle()
+        },
+        yScrollWrapStyle () {
+            if (this.size) {
+                const sizeValue = this.formatValue(this.size)
+                return {
+                    width: sizeValue
+                }
+            } else {
+                return {}
+            }
+        },
+        xScrollWrapStyle () {
+            if (this.size) {
+                const sizeValue = this.formatValue(this.size)
+                return {
+                    height: sizeValue
+                }
+            } else {
+                return {}
+            }
         }
     },
     methods: {
@@ -158,9 +200,11 @@ export default {
             this.calcSize(isVertical);
             const distance = scrollValue * clientAreaValue / scrollAreaValue;
             this[scrollBar].style.transform = `${transform}(${distance}px)`;
-            this[timer] = setTimeout(() => {
-                this[showScroll] = false;
-            }, 800);
+            if (!this.awaysShowScroll) {
+                this[timer] = setTimeout(() => {
+                    this[showScroll] = false;
+                }, 800);
+            }
             this[scroll] = target[scroll];
         },
         clickStart (el) {
@@ -183,8 +227,10 @@ export default {
             document.removeEventListener('mousemove', this.moveScrollYBar);
             document.removeEventListener('mousemove', this.moveScrollXBar);
             document.removeEventListener('mouseup', this.clickEnd);
-            this.scrollY.addEventListener('mouseout', this.hoverOutSroll);
-            this.scrollX.addEventListener('mouseout', this.hoverOutSroll);
+            if (!this.awaysShowScroll) {
+                this.scrollY.addEventListener('mouseout', this.hoverOutSroll);
+                this.scrollX.addEventListener('mouseout', this.hoverOutSroll);
+            }
         },
         moveScrollYBar (el) {
             this.moveScrollBar(el, 'pageY', 'startY', 'scrollHeight', 'clientHeight', 'distanceY', 'scrollTop');
@@ -279,6 +325,33 @@ export default {
             } else if (!isNaN(+xPosition)) {
                 scrollContainer.scrollLeft = +xPosition;
             }
+        },
+        updateScrollBar () {
+            if (!this.customScrollContainer) {
+                return
+            }
+            const {clientHeight, clientWidth, scrollHeight, scrollWidth} = this.customScrollContainer
+            const showScrollY = scrollHeight > clientHeight
+            const showScrollX = scrollWidth > clientWidth
+            this.scrollYBar.style.opacity = showScrollY ? 1 : 0
+            this.scrollXBar.style.opacity = showScrollX ? 1 : 0
+            showScrollY && this.calcSize(true)
+            showScrollX && this.calcSize()
+        },
+        createBarStyle (isYScroll) {
+            const style = {
+                ...this.barStyle
+            }
+            if (this.size) {
+                const sizeValue = this.formatValue(this.size)
+                isYScroll ? style.width = sizeValue : style.height = sizeValue
+                style.borderRadius = sizeValue
+            }
+            if (this.offset) {
+                const offsetValue = this.formatValue(this.offset)
+                isYScroll ? style.right = offsetValue : style.bottom = offsetValue
+            }
+            return style
         }
     },
     created () {
@@ -296,18 +369,25 @@ export default {
         this.scrollX = this.$refs.scrollX;
         this.scrollYBar = this.$refs.scrollYBar;
         this.scrollXBar = this.$refs.scrollXBar;
-        this.calcSize(true);
-        this.calcSize();
         this.customScrollContainer.addEventListener('scroll', this.handleScroll);
-        this.scrollY.addEventListener('mouseover', this.hoverSrollYBar);
-        this.scrollX.addEventListener('mouseover', this.hoverSrollXBar);
-        
+        if (this.awaysShowScroll) {
+            this.updateScrollBar()
+            this.scrollYBar.addEventListener('mousedown', this.clickStart);
+            this.scrollXBar.addEventListener('mousedown', this.clickStart);
+        } else {
+            this.calcSize(true);
+            this.calcSize();
+            this.scrollY.addEventListener('mouseover', this.hoverSrollYBar);
+            this.scrollX.addEventListener('mouseover', this.hoverSrollXBar);
+        }
     },
     destroyed () {
         if (!this.needCustom) { return; }
         this.customScrollContainer.removeEventListener('scroll', this.handleScroll);
-        this.scrollY.removeEventListener('mouseover', this.hoverSrollYBar);
-        this.scrollX.removeEventListener('mouseover', this.hoverSrollXBar);
+        if (!this.awaysShowScroll) {
+            this.scrollY.removeEventListener('mouseover', this.hoverSrollYBar);
+            this.scrollX.removeEventListener('mouseover', this.hoverSrollXBar);
+        }
     }
 }
 </script>
