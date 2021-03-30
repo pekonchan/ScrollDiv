@@ -59,6 +59,21 @@ Vue.use(ScrollDiv);
 
 如果你实在不想要通过以上两种方式的话，那么你在添加样式时请留意组件渲染出来的结构情况，视情况而定。
 
+全局设置所有组件的一些`prop`属性，如设置自定义滚动条的一些样式：
+
+```js
+import Vue from 'vue'
+import ScrollDiv from 'vue-scroll-div'
+
+Vue.use(ScrollDiv, {
+  barStyle: {
+    backgroundColor: 'pink', // 滚动条的颜色
+  },
+  size: 6, // 滚动条的大小
+  offset: 2 // 滚动条距离边界的偏移量
+})
+```
+
 ## Props
 插件提供了足够的属性，让你针对不同的复杂情况来自定义它的行为。
 - `height`：选填。设置容器的高度，值为`Number` or `String`类型，传入数字类型时，单位是`px`。该值默认不设置。
@@ -69,11 +84,21 @@ Vue.use(ScrollDiv);
 - `optimize`: 选填。优化在Firefox或IE浏览器下，自定义滚动条容器里，padding-bottom不起效的问题,会多渲染了一个无用的元素，故新增了该属性，默认值是`true`，即仅针对Firefox或IE浏览器才这么处理. 但是有一种情况,如果`Scroll-Div`容器内有一个容器设定了高度,内容过多溢出,但是未设置`overflow`,这种情况,`padding-bottom`的修复效果可能会欠佳存在不足.
 - `scroll`: 选填。`Function`类型,传递一个函数,用作为滚动容器绑定滚动事件监听,函数的第一个形参是表示触发事件的`event`对象
 
+注意以下属性只对自定义滚动条才生效，不是针对原生滚动条的设置
+
+- `barStyle`：选填。`Object`类型，设置自定义滚动条的各种样式，传入css的各种属性组成的对象，值的形式跟在vue里的标签上使用:style一样。常见的设置滚动条的颜色，则值为`{backgroundColor: 'pink'}`
+- `size`：选填。设置滚动条的大小，值为`Number` or `String`类型，传入数字类型时，单位是`px`。该值默认不设置。如传入8，则垂直滚动条宽度为8px，横向滚动条高度为8px。一般情况下，该属性值也会影响到滚动条的`border-radius`值，等同该值。如果用户有特别需求，可以另外设置`border-radius`样式进行覆盖，也可以用上述`barStyle`
+- `offset`：选填。滚动条距离页面边界的偏移值，值为`Number` or `String`类型，传入数字类型时，单位是`px`。该值默认不设置。如传入2，则垂直滚动条距离页面右边边界2px，横向滚动条距离页面底部边界2px
+- `awaysShowScroll`：设置滚动条是否一直显示，不消失（除没得滚动的情况下），值为`Boolean`类型，该值默认为`false`。由于以前只有滚动的时候滚动条才出现，出现的时候会重新基于容器的各种高度指标计算滚动条的长度比例，所以是没问题的。但是现在变成常驻的话，由于内容会发生改变，进而会影响滚动条的长度比例，目前暂时只能提供一个方法`updateScrollBar`暴露给使用者，使用者在内容发生变化或改变页面大小时需要主动调用这个方法以及时更改滚动条长度比例或是否展示。后续可优化这个如何监听变化机制。
+
 ## Methods
 ### scrollTo
 可以指定滚动容器滚动到什么位置,接受两个入参
 - `yPosition`: Number / String.  指定垂直滚动的位置,相当于设置`scrollTop`,当为String类型时,只有等于`top`,才起效,会滚动到顶部
 - `xPosition`: Number / String.  指定横向滚动的位置,相当于设置`scrollLeft`,当为String类型时,只有等于`left`,才起效,会滚动到最左边
+
+### updateScrollBar
+当设置了`awaysShowScroll: true`，自定义滚动条常驻的场景下，使用者在内容发生变化或改变页面大小时需要主动调用这个方法以及时更改滚动条长度比例或是否展示。后续可优化这个如何监听变化机制。
 
 ## Support us
 该组件或许还存在不足之处，或者你的使用场景更广阔，如果你有兴趣的话，可以一起努力完善这个组件。期待你的加入

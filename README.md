@@ -60,6 +60,21 @@ Considering that this component renders two different 'HTML' structures based on
 
 If you really don't want to go either way, keep an eye on the structure rendered by the component when you add styles, as the case may be.
 
+Set some 'prop' properties globally for all components, such as setting some styles for custom scrollbars:
+
+```js
+import Vue from 'vue'
+import ScrollDiv from 'vue-scroll-div'
+
+Vue.use(ScrollDiv, {
+  barStyle: {
+    backgroundColor: 'pink', // scrollbar color
+  },
+  size: 6, // scrollbar size
+  offset: 2 // scrollbar offset
+})
+```
+
 ## Props
 The plug-in provides several props
 - `height`：Optional. Set the height of the container to 'Number' or 'String' type, in 'px' units when a numeric type is passed in. This value is not set by default.
@@ -70,11 +85,21 @@ The plug-in provides several props
 - `optimize`: Optional. The problem that padding-bottom doesn't work in a custom scrollbar container in Firefox or Internet Explorer renders an extra element, so the default is' true ', which only works for Firefox or Internet Explorer.However, there is a case that if there is a container inside the 'scroll-div' container with the height set, the content overflows but 'overflow' is not set. In this case, the repair effect of 'padding-bottom' may not be good enough.
 - `scroll`: Optional. `Function` type. Pass a function that binds the scroll event listener as a scroll container, the first parameter of which is the 'event' object that represents the triggering event
 
+Note that the following properties only apply to custom scrollbars, not to native scrollbars
+
+- `barStyle`：Optional. `Object` type, Set the various styles of the custom scrollbar, pass in the CSS properties of the object, the value of the form is used in the Vue tag `:style`. It is common to set the color of the scroll bar, so the value is `{backgroundColor: 'pink'}`.
+- `size`：Optional. Set the size of the scroll bar, 'Number' or 'String' type, in 'px' units when a numeric type is passed in. This value is not set by default. If you pass 8 in, the vertical scroll bar width is 8px and the horizontal scroll bar height is 8px.In general, the value of this property will also affect the `border-radius` value of the scroll bar, which is equivalent to this value.If the user has special requirements, you can set another `border-radius` style for overwriting, or you can use the above  `barStyle`
+- `offset`：Optional. The offset value of the scroll bar from the page boundary, 'Number' or 'String' type, in 'px' units when a numeric type is passed in. This value is not set by default. If 2 is passed in, the vertical scroll bar is 2px from the right edge of the page, and the horizontal scroll bar is 2px from the bottom edge of the page
+- `awaysShowScroll`：Sets whether the scroll bar is always displayed and does not disappear (except in the case of no scroll), `Boolean` type，default value is `false`. Since the scroll bar used to appear only when scrolling, the length ratio of the scroll bar was re-calculated based on various height indicators of the container, so this is not a problem.But now become permanent, because of the content will change, which affect the ratio of the length of the scroll bar, for the moment, the method can only provide a ` updateScrollBar ` exposed to the user, the user in the content change or change the page size need to take the initiative to call this method as well as changes to the scroll bar length scale or whether the display.This mechanism of how to listen for changes can be optimized later.
+
 ## Methods
 ### scrollTo
 You can specify where the scroll container should scroll to, and accept two params:
 - `yPosition`: Number / String. Specifying the vertical scrolling position is equivalent to setting 'scrollTop', which only works if it is equal to 'top' when it is of String type and will scroll to the top
 - `xPosition`: Number / String. Specifying the position of horizontal scrolling is equivalent to setting 'scrollLeft', which only works if it is equal to 'left' when it is of String type, and will scroll to the far left
+
+### updateScrollBar
+When set the `awaysShowScroll: true`, in the custom scrollbar resident scenario, the user needs to actively call this method when the content changes or the page size changes and change the scrollbar length ratio or whether to display.This mechanism of how to listen for changes can be optimized later.
 
 ## Support us
 The component may still be lacking, or you may be using it in a broader context, and if you are interested, you can work together to improve the component. Looking forward to your joining us
