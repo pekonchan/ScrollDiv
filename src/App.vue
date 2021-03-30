@@ -39,13 +39,9 @@
 </template>
 
 <script>
-import ScrollDiv from '../packages';
 
 export default {
   name: 'App',
-  components: {
-    ScrollDiv
-  },
   data () {
     return {
       contents: [

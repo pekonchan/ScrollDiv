@@ -13,11 +13,11 @@
             <slot></slot>
             <div v-if="!needOptimize" class="scroll-view__padding" :style="{height: paddingBottom}"></div>
         </div>
-        <div v-if="needCustom" ref="scrollY" class="scroll-div-y">
-            <div ref="scrollYBar" class="scroll-div-y-bar" :class="{'is-show': showScrollY}"></div>
+        <div v-if="needCustom" ref="scrollY" class="scroll-div-y" :style="yScrollWrapStyle">
+            <div ref="scrollYBar" class="scroll-div-y-bar" :class="{'is-show': showScrollY}" :style="yBarStyle"></div>
         </div>
-        <div v-if="needCustom" ref="scrollX" class="scroll-div-x">
-            <div ref="scrollXBar" class="scroll-div-x-bar" :class="{'is-show': showScrollX}"></div>
+        <div v-if="needCustom" ref="scrollX" class="scroll-div-x" :style="xScrollWrapStyle">
+            <div ref="scrollXBar" class="scroll-div-x-bar" :class="{'is-show': showScrollX}" :style="xBarStyle"></div>
         </div>
         <slot v-if="!needCustom"></slot>
     </div>
@@ -58,6 +58,18 @@ export default {
         awaysShowScroll: {
             type: Boolean,
             default: false
+        },
+        barStyle: {
+            type: Object,
+            default: () => ({})
+        },
+        size: {
+            type: [Number, String],
+            default: ''
+        },
+        offset: {
+            type: [Number, String],
+            default: ''
         }
     },
     data () {
@@ -118,10 +130,31 @@ export default {
             }
             return style;
         },
-        barStyle () {
-            return this.awaysShowScroll ? {
-                opacity: 1
-            } : {}
+        yBarStyle () {
+            return this.createBarStyle(true)
+        },
+        xBarStyle () {
+            return this.createBarStyle()
+        },
+        yScrollWrapStyle () {
+            if (this.size) {
+                const sizeValue = this.formatValue(this.size)
+                return {
+                    width: sizeValue
+                }
+            } else {
+                return {}
+            }
+        },
+        xScrollWrapStyle () {
+            if (this.size) {
+                const sizeValue = this.formatValue(this.size)
+                return {
+                    height: sizeValue
+                }
+            } else {
+                return {}
+            }
         }
     },
     methods: {
@@ -301,6 +334,21 @@ export default {
             this.scrollXBar.style.opacity = showScrollX ? 1 : 0
             showScrollY && this.calcSize(true)
             showScrollX && this.calcSize()
+        },
+        createBarStyle (isYScroll) {
+            const style = {
+                ...this.barStyle
+            }
+            if (this.size) {
+                const sizeValue = this.formatValue(this.size)
+                isYScroll ? style.width = sizeValue : style.height = sizeValue
+                style.borderRadius = sizeValue
+            }
+            if (this.offset) {
+                const offsetValue = this.formatValue(this.offset)
+                isYScroll ? style.right = offsetValue : style.bottom = offsetValue
+            }
+            return style
         }
     },
     created () {
