@@ -327,6 +327,9 @@ export default {
             }
         },
         updateScrollBar () {
+            if (!this.customScrollContainer) {
+                return
+            }
             const {clientHeight, clientWidth, scrollHeight, scrollWidth} = this.customScrollContainer
             const showScrollY = scrollHeight > clientHeight
             const showScrollX = scrollWidth > clientWidth
