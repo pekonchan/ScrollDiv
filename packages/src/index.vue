@@ -13,10 +13,10 @@
             <slot></slot>
             <div v-if="!needOptimize" class="scroll-view__padding" :style="{height: paddingBottom}"></div>
         </div>
-        <div v-if="needCustom" ref="scrollY" class="scroll-div-y" :style="yScrollWrapStyle">
+        <div v-if="needCustom && needYBar" ref="scrollY" class="scroll-div-y" :style="yScrollWrapStyle">
             <div ref="scrollYBar" class="scroll-div-y-bar" :class="{'is-show': showScrollY}" :style="yBarStyle"></div>
         </div>
-        <div v-if="needCustom" ref="scrollX" class="scroll-div-x" :style="xScrollWrapStyle">
+        <div v-if="needCustom && needXBar" ref="scrollX" class="scroll-div-x" :style="xScrollWrapStyle">
             <div ref="scrollXBar" class="scroll-div-x-bar" :class="{'is-show': showScrollX}" :style="xBarStyle"></div>
         </div>
         <slot v-if="!needCustom"></slot>
@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import utils from './utils'
 export default {
     name: 'ScrollDiv',
     props: {
@@ -70,10 +71,16 @@ export default {
         offset: {
             type: [Number, String],
             default: ''
+        },
+        zIndex: {
+            type: Number,
+            default: null
         }
     },
     data () {
-        const disabledOptimize = navigator.userAgent.indexOf('Firefox') > -1 || "ActiveXObject" in window || window.navigator.userAgent.indexOf("MSIE") > -1
+        const disabledOptimize = navigator.userAgent.indexOf('Firefox') > -1 || "ActiveXObject" in window || window.navigator.userAgent.indexOf("MSIE") > -1;
+        ++utils.zIndex
+        let level = utils.zIndex
         return {
             needCustom: false,
             isSurportNative: false,
@@ -95,7 +102,10 @@ export default {
             scrollLeft: 0,
             gutterWidth: 0,
             paddingBottom: 0,
-            disabledOptimize
+            disabledOptimize,
+            calcIndex: level, // 自动计算的zIndex
+            needYBar: true, // 滚动条常驻时是否需要渲染垂直滚动条
+            needXBar: true // 滚动条常驻时是否需要渲染横向滚动条
         }
     },
     computed: {
@@ -137,24 +147,28 @@ export default {
             return this.createBarStyle()
         },
         yScrollWrapStyle () {
-            if (this.size) {
-                const sizeValue = this.formatValue(this.size)
-                return {
-                    width: sizeValue
-                }
-            } else {
-                return {}
+            const { zIndex, calcIndex, size } = this
+            const style = {
+                zIndex: calcIndex
             }
+            if (size) {
+                const sizeValue = this.formatValue(size)
+                style.width = sizeValue
+            }
+            zIndex && (style.zIndex = zIndex)
+            return style
         },
         xScrollWrapStyle () {
-            if (this.size) {
-                const sizeValue = this.formatValue(this.size)
-                return {
-                    height: sizeValue
-                }
-            } else {
-                return {}
+            const { zIndex, calcIndex, size } = this
+            const style = {
+                zIndex: calcIndex
             }
+            if (size) {
+                const sizeValue = this.formatValue(size)
+                style.height = sizeValue
+            }
+            zIndex && (style.zIndex = zIndex)
+            return style
         }
     },
     methods: {
@@ -199,7 +213,7 @@ export default {
             this[timer] && clearTimeout(this[timer]);
             this.calcSize(isVertical);
             const distance = scrollValue * clientAreaValue / scrollAreaValue;
-            this[scrollBar].style.transform = `${transform}(${distance}px)`;
+            this[scrollBar] && (this[scrollBar].style.transform = `${transform}(${distance}px)`);
             if (!this.awaysShowScroll) {
                 this[timer] = setTimeout(() => {
                     this[showScroll] = false;
@@ -311,7 +325,7 @@ export default {
                 scrollArea = 'scrollWidth';
             }
             const clientAreaValue = this.customScrollContainer[clientArea];
-            this[scrollBar].style[sizeKey] = clientAreaValue * clientAreaValue / this.customScrollContainer[scrollArea] + 'px';
+            this[scrollBar] && (this[scrollBar].style[sizeKey] = clientAreaValue * clientAreaValue / this.customScrollContainer[scrollArea] + 'px');
         },
         scrollTo (yPosition, xPosition) {
             const { scrollContainer } = this;
@@ -330,13 +344,30 @@ export default {
             if (!this.customScrollContainer) {
                 return
             }
-            const {clientHeight, clientWidth, scrollHeight, scrollWidth} = this.customScrollContainer
-            const showScrollY = scrollHeight > clientHeight
-            const showScrollX = scrollWidth > clientWidth
-            this.scrollYBar.style.opacity = showScrollY ? 1 : 0
-            this.scrollXBar.style.opacity = showScrollX ? 1 : 0
-            showScrollY && this.calcSize(true)
-            showScrollX && this.calcSize()
+            const {clientHeight, clientWidth, scrollHeight, scrollWidth} = this.customScrollContainer;
+            const showScrollY = scrollHeight > clientHeight;
+            const showScrollX = scrollWidth > clientWidth;
+            this.needYBar = showScrollY;
+            this.needXBar = showScrollX;
+            // 从有滚动条变成无时，解绑原本的监听事件（除初始化时，那时候还没绑定监听，但是还是会执行该段代码，因为默认滚动条是展示的）
+            !showScrollY && this.scrollYBar && this.scrollYBar.removeEventListener('mousedown', this.clickStart);
+            !showScrollX && this.scrollXBar && this.scrollXBar.removeEventListener('mousedown', this.clickStart);
+            this.$nextTick(() => {
+                this.scrollY = this.$refs.scrollY;
+                this.scrollX = this.$refs.scrollX;
+                this.scrollYBar = this.$refs.scrollYBar;
+                this.scrollXBar = this.$refs.scrollXBar;
+                if (showScrollY) {
+                    this.scrollYBar.addEventListener('mousedown', this.clickStart);
+                    this.scrollYBar.style.opacity = showScrollY ? 1 : 0 // 滚动条的默认样式是透明的
+                    this.calcSize(true);
+                }
+                if (showScrollX) {
+                    this.scrollXBar.addEventListener('mousedown', this.clickStart);
+                    this.scrollXBar.style.opacity = showScrollX ? 1 : 0
+                    this.calcSize();
+                }
+            })
         },
         createBarStyle (isYScroll) {
             const style = {
@@ -371,9 +402,7 @@ export default {
         this.scrollXBar = this.$refs.scrollXBar;
         this.customScrollContainer.addEventListener('scroll', this.handleScroll);
         if (this.awaysShowScroll) {
-            this.updateScrollBar()
-            this.scrollYBar.addEventListener('mousedown', this.clickStart);
-            this.scrollXBar.addEventListener('mousedown', this.clickStart);
+            this.updateScrollBar();
         } else {
             this.calcSize(true);
             this.calcSize();
@@ -384,7 +413,10 @@ export default {
     destroyed () {
         if (!this.needCustom) { return; }
         this.customScrollContainer.removeEventListener('scroll', this.handleScroll);
-        if (!this.awaysShowScroll) {
+        if (this.awaysShowScroll) {
+            this.scrollYBar && this.scrollYBar.removeEventListener('mousedown', this.clickStart);
+            this.scrollXBar && this.scrollXBar.removeEventListener('mousedown', this.clickStart);
+        } else {
             this.scrollY.removeEventListener('mouseover', this.hoverSrollYBar);
             this.scrollX.removeEventListener('mouseover', this.hoverSrollXBar);
         }
