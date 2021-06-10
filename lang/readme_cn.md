@@ -16,19 +16,45 @@
 - 除了上述情况，都会采用自定义滚动条方式，这样分情况来渲染不同的结果，可以最大程度上采用最简单的方式，来满足好看的滚动条样式。
 - 弥补火狐和IE浏览器,对于`padding-bottom`设置"不起作用"的问题,行为跟chrome等浏览器保持一致性
 - 能自动适应不同浏览器不同滚动条宽度,而不是写死常见的`17px`
+- 自定义滚动条是悬浮内容上方的，不会挤兑容器空间
 - 组件是包含横向和垂直滚动条
 
 简而言之，组件会采取“最优”的方案，在满足滚动条样式可观的情况下，采用渲染结构最简单，组件性能最好的方案。
 
-想了解其中的自定义核心思路，可阅读我的文章[自定义滚动条全面方案详解](https://juejin.im/post/5e93d6736fb9a03c320bb36e)
+
+## demo
+### 智能选择
+不做滚动条显示模式设定的默认情况下，会根据您所在浏览器的特性而选择不同的方案
+- macos 原生滚动条
+- webkit内核使用css来美化原生滚动条
+- 其他浏览器采用HTML元素模拟滚动条
+
+![chrome默认情况](https://user-images.githubusercontent.com/38689834/121340123-cf287080-c951-11eb-8a9b-c17e8ebadf90.gif)
+
+(chrome)
+
+![火狐默认情况](https://user-images.githubusercontent.com/38689834/121340147-d94a6f00-c951-11eb-9e9f-d31609c64b0d.gif)
+
+(firefox)
+
+### 二次自定义
+你可进一步自定义滚动条样式
+
+![改变滚动条样式](https://user-images.githubusercontent.com/38689834/121340523-4eb63f80-c952-11eb-8eb6-935b53f1ed09.gif)
+
+### more demo
+
+- [github.io](https://pekonchan.github.io/common-ui/#/main/scroll-div)
+
+- [codeopen](https://codepen.io/pekonchan/pen/bGqjjQV)
 
 ## 安装
-** 该插件不包含`vue.js`的引入，请你自行引入`vue.js` **
+**该插件不包含`vue.js`的引入，请你自行引入`vue.js`**
 
-`<script>`方式直接引入`lib/vue-scroll-nav.umd.min.js`，如：
+`<script>`方式直接引入，如：
 ```js
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
-<script src="node_modules/vue-scroll-nav/lib/vue-scroll-nav.umd.min.js"></script>
+<script src="//unpkg.com/vue-scroll-div/lib/vue-scroll-div.umd.min.js"></script>
 ```
 这样就可以在`Vue`应用里直接使用`<Scroll-Div>`标签了。
 
@@ -74,23 +100,129 @@ Vue.use(ScrollDiv, {
 })
 ```
 
-## Props
-插件提供了足够的属性，让你针对不同的复杂情况来自定义它的行为。
-- `height`：选填。设置容器的高度，值为`Number` or `String`类型，传入数字类型时，单位是`px`。该值默认不设置。
-- `width`：选填。设置容器的宽度，值为`Number` or `String`类型，传入数字类型时，单位是`px`。该值默认不设置。
-- `padding`：选填。设置容器的内边距，值为`String`类型，跟设置`css`的`padding`属性一样。该值默认不设置。
-- `useNative`：选填。针对滚动条区域占用内容本身空间的浏览器（如window系统上绝大多数浏览器），如果浏览器是`webkit`内核，则可以用`css`样式改变原生滚动条样式。如果该值设置为`true`，则启用`css`改变滚动条样式，否则，用自定义滚动条。建议开启该项，能改善性能和减少dom结构。
-- `viewClass`：选填。设置内容容器设置类名。除`width`,`height`,`padding`属性外，使用该值指定类名进行样式修改。
-- `optimize`: 选填。优化在Firefox或IE浏览器下，自定义滚动条容器里，padding-bottom不起效的问题,会多渲染了一个无用的元素，故新增了该属性，默认值是`true`，即仅针对Firefox或IE浏览器才这么处理. 但是有一种情况,如果`Scroll-Div`容器内有一个容器设定了高度,内容过多溢出,但是未设置`overflow`,这种情况,`padding-bottom`的修复效果可能会欠佳存在不足.
-- `scroll`: 选填。`Function`类型,传递一个函数,用作为滚动容器绑定滚动事件监听,函数的第一个形参是表示触发事件的`event`对象
+> 注意: 当你使用的过程中发现隐藏的原生滚动出现了，请检查你是否设置或正确设置了容器的宽高
 
-注意以下属性只对自定义滚动条才生效，不是针对原生滚动条的设置
 
-- `barStyle`：选填。`Object`类型，设置自定义滚动条的各种样式，传入css的各种属性组成的对象，值的形式跟在vue里的标签上使用:style一样。常见的设置滚动条的颜色，则值为`{backgroundColor: 'pink'}`
-- `size`：选填。设置滚动条的大小，值为`Number` or `String`类型，传入数字类型时，单位是`px`。该值默认不设置。如传入8，则垂直滚动条宽度为8px，横向滚动条高度为8px。一般情况下，该属性值也会影响到滚动条的`border-radius`值，等同该值。如果用户有特别需求，可以另外设置`border-radius`样式进行覆盖，也可以用上述`barStyle`
-- `offset`：选填。滚动条距离页面边界的偏移值，值为`Number` or `String`类型，传入数字类型时，单位是`px`。该值默认不设置。如传入2，则垂直滚动条距离页面右边边界2px，横向滚动条距离页面底部边界2px
-- `awaysShowScroll`：设置滚动条是否一直显示，不消失（除没得滚动的情况下），值为`Boolean`类型，该值默认为`false`。由于以前只有滚动的时候滚动条才出现，出现的时候会重新基于容器的各种高度指标计算滚动条的长度比例，所以是没问题的。但是现在变成常驻的话，由于内容会发生改变，进而会影响滚动条的长度比例，目前暂时只能提供一个方法`updateScrollBar`暴露给使用者，使用者在内容发生变化或改变页面大小时需要主动调用这个方法以及时更改滚动条长度比例或是否展示。后续可优化这个如何监听变化机制。
-- `zIndex`：设置滚动条的css样式`z-index`，值为`Number`类型，默认情况下会有组件自身计算的一个层级值，如果你觉得不合适，可以手动传这个值用以控制。
+### 默认情况
+
+![chrome默认情况](https://user-images.githubusercontent.com/38689834/121332966-eca60c00-c94a-11eb-941a-e15009940ae6.gif)
+
+设置容器的宽高，请直接传值到props属性的`width`和`height`，以及你要设置`padding`。
+
+可以直接传入`calc(100% - 10px)`这种字符串，支持数字类型和字符串。
+
+`view-class`是为滚动容器添加类名，用于设置一些额外的样式，因为受到不同的自定义滚动条模式的影响，具体的滚动容器可能不一样。
+
+> 注意view-class属性仅用来设置具体的滚动容器的一些样式，与滚动容器滚动无关的属性，直接请使用class。
+
+不做滚动条显示模式设定的默认情况下，会根据您所在浏览器的特性而选择不同的方案
+- macos 原生滚动条
+- webkit内核使用css来美化原生滚动条
+- 其他浏览器采用HTML元素模拟滚动条
+
+```html
+<scroll-div
+    width="400px"
+    height="100px"
+    padding="5px"
+    view-class="yourclassname">
+    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis quas nobis praesentium nisi deserunt, fuga libero, error quia vero nulla corporis odio fugit atque et accusamus numquam. Tempora, qui numquam!
+    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis quas nobis praesentium nisi deserunt, fuga libero, error quia vero nulla corporis odio fugit atque et accusamus numquam. Tempora, qui numquam!
+</scroll-div>
+
+<style>
+    .yourclassname {
+        margin: auto;
+    }
+</style>
+```
+
+### 仿MacOS效果
+
+![仿macos](https://user-images.githubusercontent.com/38689834/121333438-650ccd00-c94b-11eb-8987-a32125a9e1e3.gif)
+
+
+默认情况下`useNative`值为`true`，表示开启智能选择模式，即上述的默认情况，原生能支持就用原生的意思。
+
+这里设置`useNative="false"`，关闭智能选择，固定采用仿MacOS的效果，即window系统下的所有浏览器都会采用自定义滚动条模拟
+
+该模式能够很好地响应屏幕变化或内容变化引起的滚动容器滚动条长度的问题。
+
+```html
+<scroll-div height="100px" :use-native="false">
+    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis quas nobis praesentium nisi deserunt, fuga libero, error quia vero nulla corporis odio fugit atque et accusamus numquam. Tempora, qui numquam!
+</scroll-div>
+```
+
+### 常驻滚动条模式
+
+![火狐常驻情况](https://user-images.githubusercontent.com/38689834/121333477-6d650800-c94b-11eb-935a-83da9326df6f.gif)
+
+Windows上的火狐IE等这些非webkit内核的浏览器上，会采用HTML元素模仿滚动条，默认是仿MacOS效果的滚动条，即只有滚动了才会出现。
+
+如果你不想这样，可以开启常驻滚动条模式，只需要设置`awaysShowScroll="true"`
+
+同样可以结合`useNative`来使用，来更加自由的定制所需模式
+
+> 本示例最好在火狐或IE上体验
+
+```html
+<scroll-div height="100px" :aways-show-scroll="true">
+    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis quas nobis praesentium nisi deserunt, fuga libero, error quia vero nulla corporis odio fugit atque et accusamus numquam. Tempora, qui numquam!
+</
+scroll-div>
+```
+
+需要注意，开启了常驻模式且是自定义HTML滚动条的，目前暂时有个缺陷，就是当滚动容器尺寸或内容发生变化时，需要手动调用一下下述的`updateScrollBar`方法及时更新滚动条长度。 仿MacOS模式就没有这个缺陷
+
+### 自定义滚动条样式
+
+![改变滚动条样式](https://user-images.githubusercontent.com/38689834/121334775-8de19200-c94c-11eb-9349-837a9c359a14.gif)
+
+组件本身已经自定义了相对大众美观一点的滚动条了，当然，你仍然有更好的自定义能力，可以通过`barStyle, size, offset`等参数进一步打造属于你的滚动条效果。
+
+当然，这是针对用HTML元素模拟滚动条效果的情况下，才能生效的，即你得设置`useNative=false`
+
+> 如果你仍然想要维持高性能的`:use-native="true"`智能选择模式下，在chrome这种webkit内核的浏览器上改变样式，你得自己在项目中写全局样式覆盖`-webkit-scrollbar`等样式。
+
+```html
+<scroll-div
+    height="100px"
+    :use-native="false"
+    :bar-style="{backgroundColor: 'pink', borderRadius: '6px'}">
+    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis quas nobis praesentium nisi deserunt, fuga libero, error quia vero nulla corporis odio fugit atque et accusamus numquam. Tempora, qui numquam!
+</scroll-div>
+```
+
+```html
+<scroll-div
+    height="100px"
+    :use-native="false"
+    :bar-style="{backgroundColor: 'rgba(255, 192, 203, .5)'}"
+    size="10px"
+    offset="6px"
+    :aways-show-scroll="true">
+    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis quas nobis praesentium nisi deserunt, fuga libero, error quia vero nulla corporis odio fugit atque et accusamus numquam. Tempora, qui numquam!
+    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis quas nobis praesentium nisi deserunt, fuga libero, error quia vero nulla corporis odio fugit atque et accusamus numquam. Tempora, qui numquam!
+</scroll-div>
+```
+
+### Props
+
+| 参数 | 说明 | 类型 | 可选值 | 默认值 | 是否必填 |
+| ---- | -------------- | ------ |------- | -------- | --- |
+| height | 容器高度 | String, Number. 传入数字类型时，单位是`px` | — | — | no |
+| width | 容器宽度 | String, Number. 传入数字类型时，单位是`px` | — | — | no |
+| padding | 容器的内边距 | String | — | — | no |
+| useNative | 针对滚动条区域占用内容本身空间的浏览器（如window系统上绝大多数浏览器），<br>如果浏览器是webkit内核，则可以用css样式改变原生滚动条样式。<br>如果该值设置为true，则启用css改变滚动条样式，否则，用自定义滚动条。建议开启该项，能改善性能和减少dom结构。 | Boolan | true/false | true | no |
+| viewClass | 内容容器设置类名。除width,height,padding属性外，使用该值指定类名进行对**滚动容器**样式修改。 | String | — | — | no |
+| optimize | 优化在Firefox或IE浏览器下，自定义滚动条容器里，padding-bottom不起效的问题,会多渲染了一个无用的元素，故新增了该属性，默认值是true，即仅针对Firefox或IE浏览器才这么处理. 但是有一种情况,如果Scroll-Div容器内有一个容器设定了高度,内容过多溢出,但是未设置overflow,这种情况,padding-bottom的修复效果可能会欠佳存在不足 | Boolean | — | true | no |
+| scroll | 传递一个函数,用作为滚动容器绑定滚动事件监听,函数的第一个形参是表示触发事件的`event`对象 | Function | — | — | no |
+| barStyle | 设置自定义滚动条的各种样式，传入css的各种属性组成的对象，值的形式跟在vue里的标签上使用:style一样。 | Object | — | — | no |
+| size | 设置滚动条的大小，如传入8，则垂直滚动条宽度为8px，横向滚动条高度为8px。一般情况下，该属性值也会影响到滚动条的border-radius值，等同该值。如果用户有特别需求，可以另外设置border-radius样式进行覆盖 | String, Number | — | — | no |
+| offset | 滚动条距离页面边界的偏移值,该值默认不设置。如传入2，则垂直滚动条距离页面右边边界2px，横向滚动条距离页面底部边界2px | String, Number | — | — | no |
+| awaysShowScroll | 设置滚动条是否一直显示，不消失（除没得滚动的情况下），变成常驻的话，由于内容会发生改变，进而会影响滚动条的长度比例，目前暂时只能提供一个方法updateScrollBar暴露给使用者，使用者在内容发生变化或改变页面大小时需要主动调用这个方法以及时更改滚动条长度比例或是否展示 | Boolean | — | false | no |
+| zIndex | 设置滚动条的css样式`z-index`，默认情况下会有组件自身计算的一个层级值，如果你觉得不合适，可以手动传这个值用以控制。 | Number | — | — | no |
 
 ## Methods
 ### scrollTo

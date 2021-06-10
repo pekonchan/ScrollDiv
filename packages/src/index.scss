@@ -16,6 +16,12 @@
         opacity: 1;
         transition: opacity 0s ease 0s;
     }
+    @mixin barShowColor {
+        background-color:rgba(144,147,153,.5);
+        &:hover, &:active {
+            background-color: rgba(144,147,153,.8);
+        }
+    }
     .scroll-div-y {
         position: absolute;
         right: 0;
@@ -32,6 +38,9 @@
             transition: opacity .5s ease 0s;
             &.is-show {
                 @include showBar();
+            }
+            &.is-always-show {
+                @include barShowColor();
             }
         }
     }
@@ -52,6 +61,9 @@
             &.is-show {
                 @include showBar();
             }
+            &.is-always-show {
+                @include barShowColor();
+            }
         }
     }
 
@@ -61,6 +73,6 @@
     }
     &.is-scroll-native::-webkit-scrollbar-thumb {
         border-radius: 7px;
-        background-color: rgba(0, 0, 0, .5);
+        @include barShowColor();
     }
 }
