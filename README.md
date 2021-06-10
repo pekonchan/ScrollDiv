@@ -18,18 +18,45 @@ You can use this component instead of the html like `div`.
 - In addition to the above, custom scrollbar methods are used to render different results in different cases, which can be the most simple way to satisfy the beautiful scrollbar style.
 - Fix firefox and Internet Explorer, the 'padding-bottom' setting doesn't work, act the same as chrome and other browsers
 - Can automatically adapt to different browser scroll bar width, rather than write the usual '17px'
+- Custom scrollbars are above suspended content and do not crowd container space
 - The component contains horizontal and vertical scroll bars
 
 In short, the component takes the "best" approach, with the simplest rendering structure and the best component performance, provided the scrollbar style is significant.
+
+## demo
+### auto chose mode
+By default, no scrollbar mode will be set, depending on the features of your browser
+- MacOS native scrollbars
+- The WebKit kernel uses CSS to beautify the native scrollbars
+- Other browsers use HTML elements to simulate scrollbars
+
+![chrome默认情况](https://user-images.githubusercontent.com/38689834/121340123-cf287080-c951-11eb-8a9b-c17e8ebadf90.gif)
+
+(chrome)
+
+![火狐默认情况](https://user-images.githubusercontent.com/38689834/121340147-d94a6f00-c951-11eb-9e9f-d31609c64b0d.gif)
+
+(firefox)
+
+### deep custom
+You can second custom the scrollbars use the props
+
+![改变滚动条样式](https://user-images.githubusercontent.com/38689834/121340523-4eb63f80-c952-11eb-8eb6-935b53f1ed09.gif)
+
+### more demo
+
+- [github.io](https://pekonchan.github.io/common-ui/#/main/scroll-div)
+
+- [codeopen](https://codepen.io/pekonchan/pen/bGqjjQV)
 
 ## Install
 **This plug-in does not include the introduction of `vue.js`, please import `vue.js` yourself**
 
 ### script tag
-Use the `<script>` to import `lib/vue-scroll-nav.umd.min.js`
+Use the `<script>` to import `lib/vue-scroll-div.umd.min.js`
 ```js
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
-<script src="node_modules/vue-scroll-nav/lib/vue-scroll-nav.umd.min.js"></script>
+<script src="//unpkg.com/vue-scroll-div/lib/vue-scroll-div.umd.min.js"></script>
 ```
 so you can use the `<Scroll-Div>` tag directly in the 'Vue' application.
 
@@ -75,6 +102,8 @@ Vue.use(ScrollDiv, {
 })
 ```
 
+> Note: when you find hidden native scrolling appearing during use, please check that you have set or correctly set the container width and height
+
 ## Props
 The plug-in provides several props
 - `height`：Optional. Set the height of the container to 'Number' or 'String' type, in 'px' units when a numeric type is passed in. This value is not set by default.
@@ -82,7 +111,7 @@ The plug-in provides several props
 - `padding`：Optional. Set the padding of the container to 'String' type, just like the 'padding' property of 'CSS'. This value is not set by default.
 - `useNative`：Optional. For browsers whose scrollbar area occupies the space of the content itself (such as most browsers on the window system), if the browser is' webkit 'kernel, you can use the' CSS 'style to change the native scrollbar style. If this value is set to 'true', then 'CSS' is enabled to change the scrollbar style; otherwise, a custom scrollbar is used. It is recommended that this item be enabled to improve performance and reduce dom structure.
 - `viewClass`：Optional. Set the content container class name. In addition to 'width', 'height', 'padding' properties, it is recommended to use this value to specify the class name for style modification.
-- `optimize`: Optional. The problem that padding-bottom doesn't work in a custom scrollbar container in Firefox or Internet Explorer renders an extra element, so the default is' true ', which only works for Firefox or Internet Explorer.However, there is a case that if there is a container inside the 'scroll-div' container with the height set, the content overflows but 'overflow' is not set. In this case, the repair effect of 'padding-bottom' may not be good enough.
+- `optimize`: Optional. `Boolean` type. The problem that padding-bottom doesn't work in a custom scrollbar container in Firefox or Internet Explorer renders an extra element, so the default is' true ', which only works for Firefox or Internet Explorer.However, there is a case that if there is a container inside the 'scroll-div' container with the height set, the content overflows but 'overflow' is not set. In this case, the repair effect of 'padding-bottom' may not be good enough.
 - `scroll`: Optional. `Function` type. Pass a function that binds the scroll event listener as a scroll container, the first parameter of which is the 'event' object that represents the triggering event
 
 Note that the following properties only apply to custom scrollbars, not to native scrollbars

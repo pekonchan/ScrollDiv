@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <!-- <Scroll-Div width="500px" class="my-scroll-div" view-class="myview" :scroll="handleScroll" awaysShowScroll>
+  <div id="app" style="height: 100%">
+    <Scroll-Div width="500px" class="my-scroll-div" view-class="myview" :scroll="handleScroll" awaysShowScroll>
       <div style="width: 1000px;height: 30px;background: pink"></div>
       <div v-for="(item, index) in contents" :key="index">{{item.label}}</div>
     </Scroll-Div>
@@ -34,14 +34,18 @@
     <Scroll-Div height="200px" padding="30px" class="my-scroll-div" view-class="myview">
       <div style="width: 100px;height: 30px;background: pink"></div>
       <div v-for="(item, index) in contents" :key="index">{{item.label}}</div>
-    </Scroll-Div> -->
+    </Scroll-Div>
+
+    <Scroll-Div width="calc(100% - 200px)" class="my-scroll-div" view-class="myview" awaysShowScroll :useNative="false">
+      <div style="width: 1000px;height: 30px;background: pink"></div>
+      <div v-for="(item, index) in contents" :key="index">{{item.label}}</div>
+    </Scroll-Div>
 
     <Scroll-Div :useNative="false" :awaysShowScroll="false" :barStyle="{backgroundColor: 'gray'}">
       <Scroll-Div ref="test" height="200px" padding="30px" view-class="myview" :useNative="false" :awaysShowScroll="false">
         <span v-for="(item, index) in 300" :key="index">{{item}}</span>
       </Scroll-Div>
     </Scroll-Div>
-    
   </div>
 </template>
 
