@@ -14,10 +14,10 @@
             <div v-if="!needOptimize" class="scroll-view__padding" :style="{height: paddingBottom}"></div>
         </div>
         <div v-if="needCustom && needYBar" ref="scrollY" class="scroll-div-y" :style="yScrollWrapStyle">
-            <div ref="scrollYBar" class="scroll-div-y-bar" :class="{'is-show': showScrollY}" :style="yBarStyle"></div>
+            <div ref="scrollYBar" class="scroll-div-y-bar" :class="{'is-show': showScrollY, 'is-always-show': awaysShowScroll}" :style="yBarStyle"></div>
         </div>
         <div v-if="needCustom && needXBar" ref="scrollX" class="scroll-div-x" :style="xScrollWrapStyle">
-            <div ref="scrollXBar" class="scroll-div-x-bar" :class="{'is-show': showScrollX}" :style="xBarStyle"></div>
+            <div ref="scrollXBar" class="scroll-div-x-bar" :class="{'is-show': showScrollX, 'is-always-show': awaysShowScroll}" :style="xBarStyle"></div>
         </div>
         <slot v-if="!needCustom"></slot>
     </div>
@@ -129,8 +129,8 @@ export default {
         },
         divStyle () {
             const style = {};
-            this.height ? (style.height = `calc(${this.viewHeight} + ${this.gutterWidth}px)`) : style['overflow-x'] = 'hidden';
-            style.width = `calc(${this.width ? this.viewWidth : '100%'} + ${this.gutterWidth}px)`;
+            this.height ? (style.height = `calc(100% + ${this.gutterWidth}px)`) : style['overflow-x'] = 'hidden';
+            style.width = `calc(100% + ${this.gutterWidth}px)`;
             if (this.padding) {
                 style.padding = this.padding;
                 if (!this.needOptimize) {
@@ -341,7 +341,8 @@ export default {
             }
         },
         updateScrollBar () {
-            if (!this.customScrollContainer) {
+            // 这个方法只适用于在是自定义滚动条以及常驻滚动条的场景使用
+            if (!this.customScrollContainer || !this.awaysShowScroll) {
                 return
             }
             const {clientHeight, clientWidth, scrollHeight, scrollWidth} = this.customScrollContainer;
