@@ -59,6 +59,8 @@
 这样就可以在`Vue`应用里直接使用`<Scroll-Div>`标签了。
 
 npm方式：
+
+#### vue2版本：
 ```
 npm i vue-scroll-div
 ```
@@ -68,6 +70,19 @@ import Vue from 'vue';
 import ScrollDiv from 'vue-scroll-div';
 
 Vue.use(ScrollDiv);
+```
+
+#### vue3版本
+```
+npm i vue-scroll-div@v3
+```
+安装后使用
+```js
+import ScrollDiv from 'vue-scroll-div'
+import { createApp } from 'vue'
+
+const app = createApp(App)
+app.use(ScrollDiv)
 ```
 
 ## 使用介绍
