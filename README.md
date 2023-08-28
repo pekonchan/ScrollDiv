@@ -61,6 +61,7 @@ Use the `<script>` to import `lib/vue-scroll-div.umd.min.js`
 so you can use the `<Scroll-Div>` tag directly in the 'Vue' application.
 
 ### npm：
+#### vue2 version：
 ```
 npm i vue-scroll-div
 ```
@@ -70,6 +71,19 @@ import Vue from 'vue';
 import ScrollDiv from 'vue-scroll-div';
 
 Vue.use(ScrollDiv);
+```
+
+#### vue3 version
+```
+npm i vue-scroll-div@vue3
+```
+After install
+```js
+import ScrollDiv from 'vue-scroll-div'
+import { createApp } from 'vue'
+
+const app = createApp(App)
+app.use(ScrollDiv)
 ```
 
 ## Usage
