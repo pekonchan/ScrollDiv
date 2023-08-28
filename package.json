@@ -22,7 +22,7 @@
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
-    "publish": "npm version prerelease --preid vuenext"
+    "vue3publish": "npm version prerelease --preid vuenext && npm publish --tag vue3"
   },
   "dependencies": {
     "sass": "^1.66.1",
