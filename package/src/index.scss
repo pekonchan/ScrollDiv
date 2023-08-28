@@ -1,0 +1,78 @@
+.scroll-div {
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    box-sizing: border-box;
+    &.is-native-div {
+        display: block;
+        overflow: auto;
+    }
+    .scroll-div-view {
+        box-sizing: border-box;
+        overflow: scroll;
+    }
+    @mixin showBar {
+        cursor: pointer;
+        opacity: 1;
+        transition: opacity 0s ease 0s;
+    }
+    @mixin barShowColor {
+        background-color:rgba(144,147,153,.5);
+        &:hover, &:active {
+            background-color: rgba(144,147,153,.8);
+        }
+    }
+    .scroll-div-y {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        width: 7px;
+        .scroll-div-y-bar {
+            position: relative;
+            right: 1px;
+            width: 7px;
+            border-radius: 7px;
+            background-color:rgba(0, 0, 0, .5);
+            opacity: 0;
+            transition: opacity .5s ease 0s;
+            &.is-show {
+                @include showBar();
+            }
+            &.is-always-show {
+                @include barShowColor();
+            }
+        }
+    }
+    .scroll-div-x {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 7px;
+        .scroll-div-x-bar {
+            position: relative;
+            bottom: 1px;
+            height: 7px;
+            border-radius: 7px;
+            background-color:rgba(0, 0, 0, .5);
+            opacity: 0;
+            transition: opacity .5s ease 0s;
+            &.is-show {
+                @include showBar();
+            }
+            &.is-always-show {
+                @include barShowColor();
+            }
+        }
+    }
+
+    &.is-scroll-native::-webkit-scrollbar {
+        width: 7px;
+        height: 7px;
+    }
+    &.is-scroll-native::-webkit-scrollbar-thumb {
+        border-radius: 7px;
+        @include barShowColor();
+    }
+}
