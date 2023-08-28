@@ -74,7 +74,7 @@ Vue.use(ScrollDiv);
 
 #### vue3版本
 ```
-npm i vue-scroll-div@vue3
+npm i vue-scroll-div@vuenext
 ```
 安装后使用
 ```js
